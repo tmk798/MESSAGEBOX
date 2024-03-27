@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat App</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+  color: #fff;
+}
+
+.chat-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #444;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.chat-box {
+  height: 300px;
+  overflow-y: scroll;
+  border: 1px solid #555;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+input[type="text"], button {
+  padding: 8px;
+  margin-right: 5px;
+}
+
+button {
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.avengers {
+  color: #007bff;
+}
+
+.harry-potter {
+  color: #9b59b6;
+}
+</style>
+</head>
+<body>
+<div class="chat-container">
+  <div class="chat-box" id="chat-box"></div>
+  <input type="tel" id="mobile-number" placeholder="Enter mobile number...">
+  <input type="text" id="chat-message" placeholder="Type your message...">
+  <button onclick="sendMessage()">Send</button>
+  <input type="datetime-local" id="schedule-time">
+  <button onclick="scheduleMessage()">Schedule</button>
+</div>
+<script>
+const chatBox = document.getElementById('chat-box');
+const mobileNumberInput = document.getElementById('mobile-number');
+const chatMessageInput = document.getElementById('chat-message');
+const scheduleTimeInput = document.getElementById('schedule-time');
+
+function sendMessage() {
+  const mobileNumber = mobileNumberInput.value.trim();
+  const message = chatMessageInput.value.trim();
+  if (mobileNumber !== '' && message !== '') {
+    const finalMessage = `Message to ${mobileNumber}: ${message}`;
+    appendMessage(finalMessage);
+    chatMessageInput.value = '';
+    mobileNumberInput.value = '';
+  }
+}
+
+function scheduleMessage() {
+  const mobileNumber = mobileNumberInput.value.trim();
+  const message = chatMessageInput.value.trim();
+  const scheduleTime = scheduleTimeInput.value.trim();
+  if (mobileNumber !== '' && message !== '' && scheduleTime !== '') {
+    const finalMessage = `Scheduled message to ${mobileNumber}: ${message} (Scheduled for ${scheduleTime})`;
+    setTimeout(() => {
+      appendMessage(finalMessage);
+      chatMessageInput.value = '';
+      mobileNumberInput.value = '';
+      scheduleTimeInput.value = '';
+    }, new Date(scheduleTime) - new Date());
+  }
+}
+
+function appendMessage(message) {
+  const messageElement = document.createElement('div');
+  messageElement.innerText = message;
+  chatBox.appendChild(messageElement);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function getGreeting(date) {
+  const hours = date.getHours();
+  let greeting = '';
+  if (hours >= 5 && hours < 12) {
+    greeting = 'Good morning!';
+  } else if (hours >= 12 && hours < 18) {
+    greeting = 'Good afternoon!';
+  } else {
+    greeting = 'Good evening!';
+  }
+  return greeting;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const userResponse = prompt('Please say "hello" or "hi" to start:');
+  if (userResponse && (userResponse.toLowerCase() === 'hello' || userResponse.toLowerCase() === 'hi')) {
+    appendMessage(getGreeting(new Date()) + ' How can I assist you today?');
+  } else {
+    const theme = prompt('Do you want messages in Avengers theme? Type "avengers" or leave blank for Harry Potter theme:');
+    document.body.classList.add(theme === 'avengers' ? 'avengers' : 'harry-potter');
+    appendMessage('Welcome to the chat app!');
+  }
+});
+</script>
+</body>
+</html>
